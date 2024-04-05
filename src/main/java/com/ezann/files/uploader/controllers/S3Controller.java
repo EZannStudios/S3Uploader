@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @RestController
+@RequestMapping("/s3files")
 public class S3Controller {
 
     @Autowired
@@ -19,7 +20,7 @@ public class S3Controller {
         return s3Service.downloadFile(fileName);
     }
 
-    @GetMapping("/list/")
+    @GetMapping("/list")
     public ResponseEntity<List<String>> getFilesList() {
         return s3Service.getFileList();
     }

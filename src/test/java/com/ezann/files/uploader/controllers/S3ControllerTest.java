@@ -11,7 +11,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -30,24 +29,25 @@ public class S3ControllerTest {
         String newFileName = "oldFileName";
 
         when(service.renameFile(anyString(), anyString())).thenReturn(ResponseEntity.badRequest().body("both fileNames are equal"));
-        mockMvc.perform(MockMvcRequestBuilders.put("/rename")
+        mockMvc.perform(MockMvcRequestBuilders.put("/s3files/rename")
                         .param("oldFileName", oldFileName)
                         .param("newFileName", newFileName)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.content().string("both fileNames are equal"));
     }
-//
-//    @Test
-//    void testRenameFileOldFileNameIsNull() throws Exception {
-//        String oldFileName = null;
-//        String newFileName = "oldFileName";
-//
-//        when(service.renameFile(any(), any())).thenReturn(ResponseEntity.badRequest().body("both fileNames are equal"));
-//        mockMvc.perform(MockMvcRequestBuilders.put("/rename")
-//                        .param("newFileName", newFileName)
-//                        .contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(MockMvcResultMatchers.status().isBadRequest())
-//                .andExpect(MockMvcResultMatchers.content().string("both fileNames are equal"));
-//    }
+
+    @Test
+    void testRenameFileOldFileNameIsNull() throws Exception {
+        String oldFileName = "";
+        String newFileName = "oldFileName";
+
+        when(service.renameFile(anyString(), anyString())).thenReturn(ResponseEntity.badRequest().body("one or both fileNames are null or empty"));
+        mockMvc.perform(MockMvcRequestBuilders.put("/s3files/rename")
+                        .param("oldFileName", oldFileName)
+                        .param("newFileName", newFileName)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().string("one or both fileNames are null or empty"));
+    }
 }
